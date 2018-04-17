@@ -1,0 +1,7 @@
+Debug/*
+build/*
+!build/*.mk
+*.launch
+.settings/
+.cproject
+.project
