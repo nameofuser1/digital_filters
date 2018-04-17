@@ -113,7 +113,7 @@ static void test_rank_filter_simple_buffer(void)
 	assert(expected_output_len == output_len);
 
 	int16_t out_data[output_len];
-	status = rank_filter_filtrate(buffer, buf_size, window_size, rank, out_data, &output_len);
+	status = rank_filter_filter_sequence(buffer, buf_size, window_size, rank, out_data, &output_len);
 
 	for(unsigned int i=0; i<output_len; i++)
 	{
@@ -149,7 +149,7 @@ static void test_rank_filter_ring_buffer(void)
 
 	for(unsigned int i=window_size; i<buf_size; i++)
 	{
-		status = rank_filter_sample(&rank_filter, buffer[i], &sample);
+		status = rank_filter_filter_sample(&rank_filter, buffer[i], &sample);
 		FILTER_ASSERT(status);
 
 		assert(sample == expected_output[expected_ptr++]);

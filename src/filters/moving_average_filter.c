@@ -3,7 +3,32 @@
  *
  *  Created on: Feb 9, 2018
  *      Author: yuriy
+ *
+ *
+ *  USAGE:
+ *      1. Call moving_avg_init(...) on your filter handle
+ *      2. Call moving_avg_fill_buffer(...) when you collected enough samples(equal to window size) to compute the first sample.
+ *      3. Call moving_avg_filter_sample(...) on each new sample.
+ *
+ *      If you need to reset filter i.e. pause:
+ *          4.1 Call moving_avg_flush(...)
+ *
+ *      After that you have to fill buffer again with:
+ *          4.2 moving_avg_fill_buffer(...) before sampling.
+ *
+ *          No moving_avg_init(...) required.
+ *
+ *  You can also filter prepared sequence with:
+ *      1. moving_avg_filter_sequence(...)
+ *
+ *   Algorithm:
+ *      1. Keeps accumulative sum of the window.
+ *      2. On each sample it subtracts the last sample and adds the new one.
+ *      3. Then returns accumulative sum divided by window size. In case of HighPass filter returns middle element of the window
+ *              minus low pass moving average sample.
  */
+
+
 #include <stdlib.h>
 #include <string.h>
 
@@ -47,9 +72,8 @@ FilterStatus_t moving_avg_init(MovingAverageFilter_t *filter, FilterType_t ftype
  * @brief       Fill buffer with initial samples.
  *
  * @param[in]   filter  -   pointer to filter handle
- * @param[in]   data    -   pointer to data to copy. Length of data must be the same as window size.
- * @param[out]  y       -   pointer where computed sample will be stored if chosen buffer type is\
- *                          FilterRingBuffer. Otherwise it is unchanged.
+ * @param[in]   data    -   pointer to data to copy. Length of data must be the same as filter window size.
+ * @param[out]  y       -   pointer where computed sample will be stored.
  *
  * @return      Filter  error status
  */

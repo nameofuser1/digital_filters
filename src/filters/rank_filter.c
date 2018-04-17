@@ -10,6 +10,28 @@
 
 #include "rank_filter.h"
 
+/**
+ *  USAGE:
+ *      1. Call rank_filter_init(...) on your filter handle
+ *      2. Call rank_filter_fill_buffer(...) when you collected enough samples(equal to window size) to compute the first sample.
+ *      3. Call rank_filter_filter_sample(...) on each new sample.
+ *
+ *      If you need to reset filter i.e. pause:
+ *          4.1 Call rank_filter_flush(...)
+ *
+ *      After that you have to fill buffer again with:
+ *          4.2 rank_filter_fill_buffer(...) before sampling.
+ *
+ *          No rank_filter_init(...) required.
+ *
+ *  You can also filter prepared sequence with:
+ *      1. rank_filter_filter_sequence(...)
+ *
+ *   Algorithm:
+ *      1. When buffer is filled for the first time it sorts window with qsort and return element with given rank.
+ *      2. On each new sample it removes last sample from sorted window and inserts new sample into it.
+ */
+
 
 /* Private functions prototypes */
 static int sort_cmp_func(const void *pdata1, const void *pdata2);
@@ -95,7 +117,7 @@ FilterStatus_t rank_filter_fill_buffer(RankFilter_t *rf, int16_t *samples, int16
  *
  * @return	    Filter error status
  */
-FilterStatus_t rank_filter_sample(RankFilter_t *rank_filter, int16_t new_sample, int16_t *y)
+FilterStatus_t rank_filter_filter_sample(RankFilter_t *rank_filter, int16_t new_sample, int16_t *y)
 {
 	if(!rank_filter->initialized)
 	{
@@ -119,7 +141,7 @@ FilterStatus_t rank_filter_sample(RankFilter_t *rank_filter, int16_t new_sample,
  *
  * @return      FilterStatus_t
  */
-FilterStatus_t rank_filter_filtrate(int16_t *data, int16_t data_size, uint16_t window_size,
+FilterStatus_t rank_filter_filter_sequence(int16_t *data, int16_t data_size, uint16_t window_size,
         uint16_t rank, int16_t *y, uint16_t *y_len)
 {
     if(rank > window_size)

@@ -30,8 +30,8 @@ typedef struct rank_filter {
 
 FilterStatus_t  rank_filter_init(RankFilter_t *rank_filter, int16_t *buffer, uint16_t window_size, uint16_t rank);
 FilterStatus_t  rank_filter_fill_buffer(RankFilter_t *rf, int16_t *samples, int16_t *y);
-FilterStatus_t  rank_filter_sample(RankFilter_t *rank_filter, int16_t new_sample, int16_t *y);
-FilterStatus_t  rank_filter_filtrate(int16_t *data, int16_t data_size, uint16_t window_size,
+FilterStatus_t  rank_filter_filter_sample(RankFilter_t *rank_filter, int16_t new_sample, int16_t *y);
+FilterStatus_t  rank_filter_filter_sequence(int16_t *data, int16_t data_size, uint16_t window_size,
         uint16_t rank, int16_t *y, uint16_t *y_len);
 FilterStatus_t  rank_filter_get_output_data_len(uint16_t data_size, uint16_t window_size, uint16_t *y_len);
 void            rank_filter_flush(RankFilter_t *rank_filter);
